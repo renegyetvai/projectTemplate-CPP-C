@@ -23,8 +23,8 @@ SRCS = $(wildcard $(SRC_PATH)*.$(FILE_EXTENTION))
 SRC_PATH = src/
 
 # Path to object files
-OBJ_PATH = $(OBJ_PATH_REGEX)/
-OBJ_PATH_REGEX = build
+OBJ_PATH = build/
+OBJ_PATH_REGEX = $(shell echo $(OBJ_PATH) | sed 's/\//\\\//g')
 
 # Path to documentation
 DOC_PATH = doc/
@@ -90,7 +90,7 @@ memCheck: compileDebug
 
 # Write auto dependencies
 .depend: $(SRCS)
-	$(CC) $(SRC_PATH)*.$(FILE_EXTENTION) -MM | sed 's/^/$(OBJ_PATH_REGEX)\//g' > .depend
+	$(CC) $(SRC_PATH)*.$(FILE_EXTENTION) -MM | sed 's/^/$(OBJ_PATH_REGEX)/g' > .depend
 
 # Runs the program
 run:
