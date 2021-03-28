@@ -1,5 +1,5 @@
 # Targets that are not actually files
-.PHONY: clean compile compileDebug debugger memCheck run doc
+.PHONY: clean compile compileDebug debugger memCheck run doc ccr
 
 # No standard rules
 .SUFFIXES:
@@ -17,7 +17,7 @@ LIBS = -lm
 FLAGS = -Wall -Werror -Wextra -Wno-unused-parameter -O2
 
 # All source files
-SRCS = $(wildcard *.$(FILE_EXTENTION))
+SRCS = $(wildcard $(SRC_PATH)*.$(FILE_EXTENTION))
 
 # Location of source files
 SRC_PATH = src/
@@ -38,19 +38,26 @@ DOC_GENERATOR = doxygen
 PROG = helloworld
 
 # All object files (.o)
-OBJS = $(SRCS:%.$(FILE_EXTENTION)=%.o)
+OBJS = $(SRCS:$(SRC_PATH)%.$(FILE_EXTENTION)=$(OBJ_PATH)%.o)
 
 # Debugger and arguments
 DEBUGGER = gdb
 DEBUGGER_ARGS = -tui $(PROG) --directory=$(SRC_PATH) --quiet
 
+# MemCheck tool and arguments
+MEMTOOL = valgrind
+MEMTOOL_ARGS = -v --leak-check=full --show-reachable=yes $(PROG)
+
+# Compile the program
+compile: $(PROG)
+
 # Rule to compile the objects
-%.o: %.$(FILE_EXTENTION)
-	$(CC) $(FLAGS) -c $*.$(FILE_EXTENTION) -o $@
+$(OBJ_PATH)%.o: $(SRC_PATH)%.$(FILE_EXTENTION)
+	$(CC) $(FLAGS) -c $(SRC_PATH)$*.$(FILE_EXTENTION) -o $@
 
 # Linking the executable
-$(PROG): $(OBJS)
-	$(CC) $(OBJS) $(LIBS) -o $(PROG)
+$(PROG): folder $(OBJS)
+	$(CC) $(OBJS) $(LIBS) -o $(PROG_PATH)$(PROG)
 
 # Creates folder for object files
 folder:
@@ -61,11 +68,10 @@ doc:
 	$(DOC_GENERATOR)
 
 # Clean all generated files
-clean:
-	rm -f $(OBJS) $(PROG)
-
-# Compile the program
-compile: $(PROG)
+clean :
+	rm -f $(PROG_PATH)$(PROG)
+	rm -rf $(OBJ_PATH)
+	rm -rf $(DOC_PATH)
 
 # Compiles the program in debugging mode (with -g)
 compileDebug: FLAGS += -g
@@ -77,9 +83,11 @@ debugger: compileDebug
 
 # Runs the memory check
 memCheck: compileDebug
-	valgrind -v --leak-check=full --show-reachable=yes $(PROG)
+	$(MEMTOOL) $(MEMTOOL_ARGS)
 
 # Runs the program
 run:
-	./$(PROG)
+	$(PROG_PATH)$(PROG)
 
+# Cleans, compiles and runs the program
+ccr: clean compile run
