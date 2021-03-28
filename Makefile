@@ -23,7 +23,8 @@ SRCS = $(wildcard $(SRC_PATH)*.$(FILE_EXTENTION))
 SRC_PATH = src/
 
 # Path to object files
-OBJ_PATH = build/
+OBJ_PATH = $(OBJ_PATH_REGEX)/
+OBJ_PATH_REGEX = build
 
 # Path to documentation
 DOC_PATH = doc/
@@ -72,7 +73,8 @@ clean :
 	rm -f $(PROG_PATH)$(PROG)
 	rm -rf $(OBJ_PATH)
 	rm -rf $(DOC_PATH)
-	rm -rf doxygen.log
+	rm -f doxygen.log
+	rm -f .depend
 
 # Compiles the program in debugging mode (with -g)
 compileDebug: FLAGS += -g
@@ -86,9 +88,9 @@ debugger: compileDebug
 memCheck: compileDebug
 	$(MEMTOOL) $(MEMTOOL_ARGS)
 
-# Automatische Abhängigkeiten
+# Write auto dependencies
 .depend: $(SRCS)
-	$(CC) $(SRC_PATH)*.$(FILE_EXTENTION) -MM > .depend
+	$(CC) $(SRC_PATH)*.$(FILE_EXTENTION) -MM | sed 's/^/$(OBJ_PATH_REGEX)\//g' > .depend
 
 # Runs the program
 run:
@@ -96,3 +98,6 @@ run:
 
 # Cleans, compiles and runs the program
 ccr: clean compile run
+
+# Include .depend file
+include .depend
