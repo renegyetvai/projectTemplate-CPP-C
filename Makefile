@@ -42,11 +42,11 @@ OBJS = $(SRCS:$(SRC_PATH)%.$(FILE_EXTENTION)=$(OBJ_PATH)%.o)
 
 # Debugger and arguments
 DEBUGGER = gdb
-DEBUGGER_ARGS = -tui $(PROG) --directory=$(SRC_PATH) --quiet
+DEBUGGER_ARGS = -tui $(PROG_PATH)$(PROG) --directory=$(SRC_PATH) --quiet
 
 # MemCheck tool and arguments
 MEMTOOL = valgrind
-MEMTOOL_ARGS = -v --leak-check=full --show-reachable=yes $(PROG)
+MEMTOOL_ARGS = -v --leak-check=full --show-reachable=yes $(PROG_PATH)$(PROG)
 
 # Compile the program
 compile: $(PROG)
@@ -72,6 +72,7 @@ clean :
 	rm -f $(PROG_PATH)$(PROG)
 	rm -rf $(OBJ_PATH)
 	rm -rf $(DOC_PATH)
+	rm -rf doxygen.log
 
 # Compiles the program in debugging mode (with -g)
 compileDebug: FLAGS += -g
