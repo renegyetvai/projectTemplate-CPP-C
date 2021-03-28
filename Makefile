@@ -56,7 +56,7 @@ $(OBJ_PATH)%.o: $(SRC_PATH)%.$(FILE_EXTENTION)
 	$(CC) $(FLAGS) -c $(SRC_PATH)$*.$(FILE_EXTENTION) -o $@
 
 # Linking the executable
-$(PROG): folder $(OBJS)
+$(PROG): folder .depend $(OBJS)
 	$(CC) $(OBJS) $(LIBS) -o $(PROG_PATH)$(PROG)
 
 # Creates folder for object files
@@ -85,6 +85,10 @@ debugger: compileDebug
 # Runs the memory check
 memCheck: compileDebug
 	$(MEMTOOL) $(MEMTOOL_ARGS)
+
+# Automatische Abhängigkeiten
+.depend: $(SRCS)
+	$(CC) $(SRC_PATH)*.$(FILE_EXTENTION) -MM > .depend
 
 # Runs the program
 run:
