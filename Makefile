@@ -14,7 +14,7 @@ FILE_EXTENTION = cpp
 LIBS = -lm
 
 # Compiler flags
-FLAGS = -Wall -Werror -Wextra -Wno-unused-parameter -O2
+FLAGS = -Wall -Werror -Wextra -Wno-unused-parameter
 
 # All source files
 SRCS = $(wildcard $(SRC_PATH)*.$(FILE_EXTENTION))
@@ -50,6 +50,7 @@ MEMTOOL = valgrind
 MEMTOOL_ARGS = -v --leak-check=full --show-reachable=yes $(PROG_PATH)$(PROG)
 
 # Compile the program
+compile: FLAGS += -O2
 compile: $(PROG)
 
 # Rule to compile the objects
