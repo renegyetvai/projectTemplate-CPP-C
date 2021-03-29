@@ -54,15 +54,18 @@ compile: $(PROG)
 
 # Rule to compile the objects
 $(OBJ_PATH)%.o: $(SRC_PATH)%.$(FILE_EXTENTION)
-	$(CC) $(FLAGS) -c $(SRC_PATH)$*.$(FILE_EXTENTION) -o $@
+	@echo "Compiling $<"
+	@$(CC) $(FLAGS) -c $(SRC_PATH)$*.$(FILE_EXTENTION) -o $@
 
 # Linking the executable
 $(PROG): folder .depend $(OBJS)
-	$(CC) $(OBJS) $(LIBS) -o $(PROG_PATH)$(PROG)
+	@echo "Linking program \"$(PROG_PATH)$(PROG)\""
+	@$(CC) $(OBJS) $(LIBS) -o $(PROG_PATH)$(PROG)
 
 # Creates folder for object files
 folder:
-	mkdir -p $(OBJ_PATH)
+	@echo "Creating object directory"
+	@mkdir -p $(OBJ_PATH)
 
 # Creates project documentation
 doc:
@@ -70,11 +73,15 @@ doc:
 
 # Clean all generated files
 clean :
-	rm -f $(PROG_PATH)$(PROG)
-	rm -rf $(OBJ_PATH)
-	rm -rf $(DOC_PATH)
-	rm -f doxygen.log
-	rm -f .depend
+	@echo "Cleaning program"
+	@rm -f $(PROG_PATH)$(PROG)
+	@echo "Cleaning objects"
+	@rm -rf $(OBJ_PATH)
+	@echo "Cleaning doc"
+	@rm -rf $(DOC_PATH)
+	@rm -f doxygen.log
+	@echo "Cleaning dependencies"
+	@rm -f .depend
 
 # Compiles the program in debugging mode (with -g)
 compileDebug: FLAGS += -g
@@ -90,7 +97,8 @@ memCheck: compileDebug
 
 # Write auto dependencies
 .depend: $(SRCS)
-	$(CC) $(SRC_PATH)*.$(FILE_EXTENTION) -MM | sed 's/^/$(OBJ_PATH_REGEX)/g' > .depend
+	@echo "Reading dependencies"
+	@$(CC) $(SRC_PATH)*.$(FILE_EXTENTION) -MM | sed 's/^/$(OBJ_PATH_REGEX)/g' > .depend
 
 # Runs the program
 run:
