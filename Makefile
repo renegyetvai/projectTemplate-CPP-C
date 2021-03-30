@@ -59,12 +59,12 @@ $(OBJ_PATH)%.o: $(SRC_PATH)%.$(FILE_EXTENTION)
 	@$(CC) $(FLAGS) -c $(SRC_PATH)$*.$(FILE_EXTENTION) -o $@
 
 # Linking the executable
-$(PROG): folder .depend $(OBJS)
+$(PROG): $(OBJ_PATH) .depend $(OBJS)
 	@echo "Linking program \"$(PROG_PATH)$(PROG)\""
 	@$(CC) $(OBJS) $(LIBS) -o $(PROG_PATH)$(PROG)
 
 # Creates folder for object files
-folder:
+$(OBJ_PATH):
 	@echo "Creating object directory"
 	@mkdir -p $(OBJ_PATH)
 
