@@ -20,7 +20,7 @@ FLAGS = -Wall -Werror -Wextra -Wno-unused-parameter
 SRCS = $(wildcard $(SRC_PATH)*.$(FILE_EXTENTION))
 
 # Location of source files
-SRC_PATH = src/
+SRC_PATH = tests/
 
 # Path to object files
 OBJ_PATH = build/
