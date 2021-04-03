@@ -1,10 +1,10 @@
-# C/CPP Project Template
+# C/CPP project template
 This is a template for small to standard sized C or C++ Projects.
 
-## General Advice:
+## General advice:
 All setting can be customized at the top of the makefile.
 
-## Initial Structure
+## Initial makefile structure
 ### The initial configuration builds the following structure:
 - build/    : Folder for all *.o files
 - doc/      : Folder for all documentation files (created by 'make doc')
