@@ -1,3 +1,5 @@
+# author Rene Gyetvai & Philipp Munz
+
 # Targets that are not actually files
 .PHONY: clean compile compileDebug debugger memCheck run doc ccr
 
