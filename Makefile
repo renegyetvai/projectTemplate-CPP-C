@@ -1,7 +1,7 @@
 # author Rene Gyetvai & Philipp Munz
 
 # Targets that are not actually files
-.PHONY: clean compile compileDebug debugger memCheck run doc ccr
+.PHONY: clean compile compileDebug debugger memCheck run doc ccr compileRelease
 
 # No standard rules
 .SUFFIXES:
@@ -52,8 +52,13 @@ MEMTOOL = valgrind
 MEMTOOL_ARGS = -v --leak-check=full --show-reachable=yes $(PROG_PATH)$(PROG)
 
 # Compile the program
-compile: FLAGS += -O2
+compile: FLAGS += -O1
 compile: $(PROG)
+
+# Compile with full optimizations
+compileRelease: FLAGS += -O3 -flto
+compileRelease:
+	$(CC) $(FLAGS) $(SRC_PATH)*.$(FILE_EXTENTION) $(LIBS) -o $(PROG_PATH)$(PROG)
 
 # Rule to compile the objects
 $(OBJ_PATH)%.o: $(SRC_PATH)%.$(FILE_EXTENTION)
