@@ -58,7 +58,7 @@ compile: $(PROG)
 # Compile with full optimizations
 compileRelease: FLAGS += -O3 -flto
 compileRelease:
-	$(CC) $(FLAGS) $(SRC_PATH)*.$(FILE_EXTENTION) $(LIBS) -o $(PROG_PATH)$(PROG)
+	$(CC) $(FLAGS) $(SRCS) $(LIBS) -o $(PROG_PATH)$(PROG)
 
 # Rule to compile the objects
 $(OBJ_PATH)%.o: $(SRC_PATH)%.$(FILE_EXTENTION)
