@@ -19,7 +19,7 @@ LIBS = -lm
 FLAGS = -Wall -Werror -Wextra -Wno-unused-parameter
 
 # All source files
-SRCS = $(wildcard $(SRC_PATH)*.$(FILE_EXTENTION))
+SRCS = $(wildcard $(SRC_PATH)*.$(FILE_EXTENTION)) $(wildcard $(SRC_PATH)*/*.$(FILE_EXTENTION))
 
 # Location of source files
 SRC_PATH = tests/
@@ -63,17 +63,13 @@ compileRelease:
 # Rule to compile the objects
 $(OBJ_PATH)%.o: $(SRC_PATH)%.$(FILE_EXTENTION)
 	@echo "Compiling $<"
+	@mkdir -p $(@D)
 	@$(CC) $(FLAGS) -c $(SRC_PATH)$*.$(FILE_EXTENTION) -o $@
 
 # Linking the executable
-$(PROG): $(OBJ_PATH) .depend $(OBJS)
+$(PROG): .depend $(OBJS)
 	@echo "Linking program \"$(PROG_PATH)$(PROG)\""
 	@$(CC) $(OBJS) $(LIBS) -o $(PROG_PATH)$(PROG)
-
-# Creates folder for object files
-$(OBJ_PATH):
-	@echo "Creating object directory"
-	@mkdir -p $(OBJ_PATH)
 
 # Creates project documentation
 doc:
