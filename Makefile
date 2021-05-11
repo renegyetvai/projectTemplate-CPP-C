@@ -1,7 +1,7 @@
 # author Rene Gyetvai & Philipp Munz
 
 # Targets that are not actually files
-.PHONY: clean compile compileDebug debugger memCheck run doc ccr compileRelease
+.PHONY: clean compile compileDebug debugger memCheck run doc ccr compileRelease showDoc
 
 # No standard rules
 .SUFFIXES:
@@ -31,11 +31,14 @@ OBJ_PATH_REGEX = $(shell echo $(OBJ_PATH) | sed 's/\//\\\//g')
 # Path to documentation
 DOC_PATH = doc/
 
-# Path to program
-PROG_PATH = ./
-
 # Tool for documentation
 DOC_GENERATOR = doxygen
+
+# File containing the documentation (or start of documentation)
+DOC_START_FILE = html/index.html
+
+# Path to program
+PROG_PATH = ./
 
 # Name of executable
 PROG = helloworld
@@ -72,8 +75,11 @@ $(PROG): .depend $(OBJS)
 	@$(CC) $(OBJS) $(LIBS) -o $(PROG_PATH)$(PROG)
 
 # Creates project documentation
-doc:
+$(DOC_PATH)$(DOC_START_FILE):
 	$(DOC_GENERATOR)
+
+# Creates project documentation (alias)
+doc: $(DOC_PATH)$(DOC_START_FILE)
 
 # Clean all generated files
 clean :
@@ -110,6 +116,10 @@ run:
 
 # Cleans, compiles and runs the program
 ccr: clean compile run
+
+# Display documentation with standard program
+showDoc: $(DOC_PATH)$(DOC_START_FILE)
+	xdg-open $(DOC_PATH)$(DOC_START_FILE)
 
 # Include .depend file
 include .depend
