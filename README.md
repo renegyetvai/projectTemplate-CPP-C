@@ -37,4 +37,5 @@ To identify memory issues valgrind is used with the arguments '-v --leak-check=f
 - memCheck       : Runs the memory check tool with its arguments and if not done starts compileDebug.
 - run            : Runs the compiled program.
 - ccr            : Runs the targets clean, compile and run in this order.
+- showDoc        : Displays the documentation using the standard program for its file type
 
