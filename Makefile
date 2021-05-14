@@ -61,7 +61,9 @@ compile: $(PROG)
 # Compile with full optimizations
 compileRelease: FLAGS += -O3 -flto
 compileRelease:
-	$(CC) $(FLAGS) $(SRCS) $(LIBS) -o $(PROG_PATH)$(PROG)
+	@echo "Compiling for release ..."
+	@$(CC) $(FLAGS) $(SRCS) $(LIBS) -o $(PROG_PATH)$(PROG)
+	@echo "done"
 
 # Rule to compile the objects
 $(OBJ_PATH)%.o: $(SRC_PATH)%.$(FILE_EXTENTION)
