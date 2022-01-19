@@ -77,7 +77,7 @@ $(PROG): .depend $(OBJS)
 	@$(CC) $(OBJS) $(LIBS) -o $(PROG_PATH)$(PROG)
 
 # Creates project documentation
-$(DOC_PATH)$(DOC_START_FILE):
+$(DOC_PATH)$(DOC_START_FILE): $(OBJS)
 	$(DOC_GENERATOR)
 
 # Creates project documentation (alias)
@@ -114,7 +114,7 @@ memCheck: compileDebug
 
 # Runs the program
 run:
-	$(PROG_PATH)$(PROG)
+	@$(PROG_PATH)$(PROG)
 
 # Cleans, compiles and runs the program
 ccr: clean compile run
