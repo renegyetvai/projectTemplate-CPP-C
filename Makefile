@@ -22,11 +22,10 @@ FLAGS = -Wall -Werror -Wextra -Wno-unused-parameter
 SRCS = $(wildcard $(SRC_PATH)*.$(FILE_EXTENTION)) $(wildcard $(SRC_PATH)*/*.$(FILE_EXTENTION))
 
 # Location of source files
-SRC_PATH = tests/
+SRC_PATH = src/
 
 # Path to object files
 OBJ_PATH = build/
-OBJ_PATH_REGEX = $(shell echo $(OBJ_PATH) | sed 's/\//\\\//g')
 
 # Path to documentation
 DOC_PATH = doc/
@@ -110,7 +109,10 @@ memCheck: compileDebug
 # Write auto dependencies
 .depend: $(SRCS)
 	@echo "Reading dependencies"
-	@$(CC) $(SRC_PATH)*.$(FILE_EXTENTION) -MM | sed -E 's/^([[:alpha:]])/$(OBJ_PATH_REGEX)\1/g' > .depend
+	@rm -f .depend
+	@for i in $^; do \
+		$(CC) -MM -MT $$(echo $$i | sed 's/^src/build/g' | sed 's/\.c$$/\.o/g') $$i >> .depend; \
+	done
 
 # Runs the program
 run:

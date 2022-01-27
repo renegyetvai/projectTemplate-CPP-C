@@ -2,3 +2,4 @@
 build/
 helloworld
 .vscode/
+.depend
