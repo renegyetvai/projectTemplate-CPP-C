@@ -19,16 +19,16 @@ LIBS = -lm
 FLAGS = -Wall -Werror -Wextra -Wno-unused-parameter
 
 # All source files
-SRCS = $(wildcard $(SRC_PATH)*.$(FILE_EXTENTION)) $(wildcard $(SRC_PATH)*/*.$(FILE_EXTENTION))
+SRCS = $(wildcard $(SRC_PATH)/*.$(FILE_EXTENTION)) $(wildcard $(SRC_PATH)/*/*.$(FILE_EXTENTION))
 
 # Location of source files
-SRC_PATH = src/
+SRC_PATH = src
 
 # Path to object files
-OBJ_PATH = build/
+OBJ_PATH = build
 
 # Path to documentation
-DOC_PATH = doc/
+DOC_PATH = doc
 
 # Tool for documentation
 DOC_GENERATOR = doxygen
@@ -37,21 +37,21 @@ DOC_GENERATOR = doxygen
 DOC_START_FILE = html/index.html
 
 # Path to program
-PROG_PATH = ./
+PROG_PATH = .
 
 # Name of executable
 PROG = helloworld
 
 # All object files (.o)
-OBJS = $(SRCS:$(SRC_PATH)%.$(FILE_EXTENTION)=$(OBJ_PATH)%.o)
+OBJS = $(SRCS:$(SRC_PATH)/%.$(FILE_EXTENTION)=$(OBJ_PATH)/%.o)
 
 # Debugger and arguments
 DEBUGGER = gdb
-DEBUGGER_ARGS = -tui $(PROG_PATH)$(PROG) --directory=$(SRC_PATH) --quiet
+DEBUGGER_ARGS = -tui $(PROG_PATH)/$(PROG) --directory=$(SRC_PATH)/ --quiet
 
 # MemCheck tool and arguments
 MEMTOOL = valgrind
-MEMTOOL_ARGS = -v --leak-check=full --show-reachable=yes $(PROG_PATH)$(PROG)
+MEMTOOL_ARGS = -v --leak-check=full --show-reachable=yes $(PROG_PATH)/$(PROG)
 
 # Compile the program
 compile: FLAGS += -O1
@@ -61,35 +61,35 @@ compile: $(PROG)
 compileRelease: FLAGS += -O3 -flto
 compileRelease:
 	@echo "Compiling for release ..."
-	@$(CC) $(FLAGS) $(SRCS) $(LIBS) -o $(PROG_PATH)$(PROG)
+	@$(CC) $(FLAGS) $(SRCS) $(LIBS) -o $(PROG_PATH)/$(PROG)
 	@echo "done"
 
 # Rule to compile the objects
-$(OBJ_PATH)%.o: $(SRC_PATH)%.$(FILE_EXTENTION)
+$(OBJ_PATH)/%.o: $(SRC_PATH)/%.$(FILE_EXTENTION)
 	@echo "Compiling $<"
 	@mkdir -p $(@D)
-	@$(CC) $(FLAGS) -c $(SRC_PATH)$*.$(FILE_EXTENTION) -o $@
+	@$(CC) $(FLAGS) -c $(SRC_PATH)/$*.$(FILE_EXTENTION) -o $@
 
 # Linking the executable
 $(PROG): .depend $(OBJS)
-	@echo "Linking program \"$(PROG_PATH)$(PROG)\""
-	@$(CC) $(OBJS) $(LIBS) -o $(PROG_PATH)$(PROG)
+	@echo "Linking program \"$(PROG_PATH)/$(PROG)\""
+	@$(CC) $(OBJS) $(LIBS) -o $(PROG_PATH)/$(PROG)
 
 # Creates project documentation
-$(DOC_PATH)$(DOC_START_FILE): $(OBJS)
+$(DOC_PATH)/$(DOC_START_FILE): $(OBJS)
 	$(DOC_GENERATOR)
 
 # Creates project documentation (alias)
-doc: $(DOC_PATH)$(DOC_START_FILE)
+doc: $(DOC_PATH)/$(DOC_START_FILE)
 
 # Clean all generated files
 clean :
 	@echo "Cleaning program"
-	@rm -f $(PROG_PATH)$(PROG)
+	@rm -f $(PROG_PATH)/$(PROG)
 	@echo "Cleaning objects"
-	@rm -rf $(OBJ_PATH)
+	@rm -rf $(OBJ_PATH)/
 	@echo "Cleaning doc"
-	@rm -rf $(DOC_PATH)
+	@rm -rf $(DOC_PATH)/
 	@rm -f doxygen.log
 	@echo "Cleaning dependencies"
 	@rm -f .depend
@@ -111,19 +111,19 @@ memCheck: compileDebug
 	@echo "Reading dependencies"
 	@rm -f .depend
 	@for i in $^; do \
-		$(CC) -MM -MT $$(echo $$i | sed 's/^src/build/g' | sed 's/\.c$$/\.o/g') $$i >> .depend; \
+		$(CC) -MM -MT $$(echo $$i | sed 's/^$(SRC_PATH)/$(OBJ_PATH)/g' | sed 's/\.$(FILE_EXTENTION)$$/\.o/g') $$i >> .depend; \
 	done
 
 # Runs the program
 run:
-	@$(PROG_PATH)$(PROG)
+	@$(PROG_PATH)/$(PROG)
 
 # Cleans, compiles and runs the program
 ccr: clean compile run
 
 # Display documentation with standard program
-showDoc: $(DOC_PATH)$(DOC_START_FILE)
-	xdg-open $(DOC_PATH)$(DOC_START_FILE)
+showDoc: $(DOC_PATH)/$(DOC_START_FILE)
+	xdg-open $(DOC_PATH)/$(DOC_START_FILE)
 
 # Include .depend file
 include .depend
