@@ -51,7 +51,7 @@ DEBUGGER_ARGS = -tui $(PROG_PATH)/$(PROG) --directory=$(SRC_PATH)/ --quiet
 
 # MemCheck tool and arguments
 MEMTOOL = valgrind
-MEMTOOL_ARGS = -v --leak-check=full --show-reachable=yes $(PROG_PATH)/$(PROG)
+MEMTOOL_ARGS = -v --leak-check=full --show-reachable=yes --track-origins=yes --error-exitcode=1 $(PROG_PATH)/$(PROG)
 
 # Compile the program
 compile: FLAGS += -O1
